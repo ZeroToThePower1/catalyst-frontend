@@ -1,6 +1,6 @@
 
 const CONFIG = {
-    API_BASE_URL: 'https://catalyst-server-a057.onrender.com',
+    API_BASE_URL: 'http://localhost:3000',
     SOCKET_RECONNECT_DELAY: 3000,
     NOTIFICATION_DURATION: 3000,
     MAX_RECONNECT_ATTEMPTS: 5
@@ -19,247 +19,6 @@ const AppState = {
     isSocketInitializing: false,
     messageQueue: []
 };
-
-// Sidebar functionality
-const menuToggle = document.getElementById('menuToggle');
-const closeMenu = document.getElementById('closeMenu');
-const overlay = document.getElementById('overlay');
-const sidebar = document.getElementById('sidebar');
-
-// Function to open sidebar
-function openSidebar() {
-    sidebar.classList.add('show');
-    overlay.classList.add('show');
-    document.body.style.overflow = 'hidden';
-}
-
-// Function to close sidebar
-function closeSidebar() {
-    sidebar.classList.remove('show');
-    overlay.classList.remove('show');
-    document.body.style.overflow = '';
-}
-
-// Event listeners for sidebar
-if (menuToggle) {
-    menuToggle.addEventListener('click', openSidebar);
-}
-
-if (closeMenu) {
-    closeMenu.addEventListener('click', closeSidebar);
-}
-
-if (overlay) {
-    overlay.addEventListener('click', closeSidebar);
-}
-
-// Close sidebar with escape key
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && sidebar.classList.contains('show')) {
-        closeSidebar();
-    }
-});
-
-// Transfer functionality from navbar to sidebar
-function setupSidebarFunctionality() {
-    // Theme toggle
-    const navbarThemeToggle = document.getElementById('themeToggle');
-    const sidebarThemeToggle = document.getElementById('sidebarThemeToggle');
-
-    if (navbarThemeToggle && sidebarThemeToggle) {
-        sidebarThemeToggle.addEventListener('click', function () {
-            if (navbarThemeToggle.onclick) {
-                navbarThemeToggle.onclick();
-            } else if (typeof toggleTheme === 'function') {
-                toggleTheme();
-            }
-            updateSidebarThemeStatus();
-            closeSidebar();
-        });
-    }
-
-    // Notifications
-    const navbarNotificationBtn = document.getElementById('notificationBtn');
-    const sidebarNotificationBtn = document.getElementById('sidebarNotificationBtn');
-
-    if (navbarNotificationBtn && sidebarNotificationBtn) {
-        sidebarNotificationBtn.addEventListener('click', function () {
-            if (navbarNotificationBtn.onclick) {
-                navbarNotificationBtn.onclick();
-            } else {
-                // Trigger notification popup
-                const notificationPopup = document.getElementById('notificationPopup');
-                if (notificationPopup) {
-                    notificationPopup.classList.toggle('show');
-                }
-            }
-            closeSidebar();
-        });
-    }
-
-    // Auth button
-    const navbarAuthBtn = document.getElementById('authBtn');
-    const sidebarAuthBtn = document.getElementById('sidebarAuthBtn');
-
-    if (navbarAuthBtn && sidebarAuthBtn) {
-        sidebarAuthBtn.addEventListener('click', function () {
-            if (navbarAuthBtn.onclick) {
-                navbarAuthBtn.onclick();
-            } else {
-                // Trigger auth window
-                const authWindow = document.getElementById('authWindow');
-                if (authWindow) {
-                    authWindow.classList.toggle('show');
-                }
-            }
-            closeSidebar();
-        });
-    }
-
-    // Tab navigation from sidebar
-    const sidebarTabItems = document.querySelectorAll('.sidebar .menu-item[data-tab]');
-    sidebarTabItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-            e.preventDefault();
-            const tab = this.getAttribute('data-tab');
-
-            // Switch to the tab
-            if (typeof switchTab === 'function') {
-                switchTab(tab);
-            } else {
-                // Fallback tab switching
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.getAttribute('data-tab') === tab) {
-                        btn.classList.add('active');
-                    }
-                });
-
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.remove('active');
-                    if (content.id === `${tab}-tab`) {
-                        content.classList.add('active');
-                    }
-                });
-            }
-
-            // Update active state in sidebar
-            sidebarTabItems.forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
-
-            closeSidebar();
-        });
-    });
-
-    // Search functionality
-    const navbarSearch = document.getElementById('globalSearch');
-    const sidebarSearch = document.getElementById('sidebarSearch');
-
-    if (navbarSearch && sidebarSearch) {
-        sidebarSearch.addEventListener('keyup', function (e) {
-            if (e.key === 'Enter') {
-                // Transfer search value
-                navbarSearch.value = this.value;
-
-                // Trigger search if there's a function
-                if (typeof performSearch === 'function') {
-                    performSearch(this.value);
-                }
-
-                closeSidebar();
-            }
-        });
-    }
-}
-
-// Update sidebar theme status
-function updateSidebarThemeStatus() {
-    const themeStatus = document.getElementById('sidebarThemeStatus');
-    if (themeStatus) {
-        const isDark = document.body.classList.contains('dark-theme');
-        themeStatus.textContent = isDark ? 'Dark' : 'Light';
-
-        // Update icon
-        const themeIcon = document.querySelector('#sidebarThemeToggle i');
-        if (themeIcon) {
-            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
-}
-
-// Update sidebar user info
-function updateSidebarUserInfo() {
-    const userInfoSidebar = document.getElementById('userInfoSidebar');
-    const sidebarAuthBtn = document.getElementById('sidebarAuthBtn');
-
-    // Check if user is logged in (you'll need to implement this check)
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' ||
-        sessionStorage.getItem('isLoggedIn') === 'true';
-
-    if (isLoggedIn && userInfoSidebar && sidebarAuthBtn) {
-        userInfoSidebar.classList.add('logged-in');
-        sidebarAuthBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-
-        // Update user info from storage or API
-        const userName = localStorage.getItem('username') || 'User';
-        const userEmail = localStorage.getItem('email') || 'user@example.com';
-
-        document.getElementById('userName').textContent = userName;
-        document.getElementById('userEmail').textContent = userEmail;
-
-        // Set avatar initial
-        const avatar = document.getElementById('userAvatar');
-        if (avatar) {
-            avatar.textContent = userName.charAt(0).toUpperCase();
-        }
-    } else if (userInfoSidebar && sidebarAuthBtn) {
-        userInfoSidebar.classList.remove('logged-in');
-        sidebarAuthBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login / Sign Up';
-    }
-}
-
-// Update sidebar notification badge
-function updateSidebarNotificationBadge(count) {
-    const badge = document.getElementById('sidebarNotificationBadge');
-    if (badge) {
-        if (count > 0) {
-            badge.style.display = 'block';
-        } else {
-            badge.style.display = 'none';
-        }
-    }
-}
-
-// Update sidebar chat unread badge
-function updateSidebarChatBadge(count) {
-    const badge = document.getElementById('sidebarChatUnread');
-    if (badge) {
-        if (count > 0) {
-            badge.textContent = count;
-            badge.style.display = 'flex';
-        } else {
-            badge.style.display = 'none';
-        }
-    }
-}
-
-// Initialize sidebar when page loads
-document.addEventListener('DOMContentLoaded', function () {
-    setupSidebarFunctionality();
-    updateSidebarThemeStatus();
-    updateSidebarUserInfo();
-
-    // Initial theme check
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-        updateSidebarThemeStatus();
-    }
-});
-
-// Close sidebar when clicking on menu items
-document.querySelectorAll('.sidebar .menu-item').forEach(item => {
-    item.addEventListener('click', closeSidebar);
-});
 
 
 const DOM = {
@@ -4593,9 +4352,9 @@ class GamesManager {
         this.state.socket.on('playerJoined', (data) => {
             console.log('👤 Player joined:', data);
             if (String(data.userId) !== String(this.state.playerId)) {
-                this.state.opponent = {
-                    username: data.username,
-                    userId: data.userId
+                this.state.opponent = { 
+                    username: data.username, 
+                    userId: data.userId 
                 };
                 this.updateUI();
             }
@@ -4638,11 +4397,11 @@ class GamesManager {
             this.state.gameStatus = 'waiting';
             this.state.isHost = true;
             this.state.opponent = null;
-
+            
             if (this.state.socket) {
                 this.state.socket.emit('joinGameRoom', this.state.currentRoom);
             }
-
+            
             this.updateUI();
             alert(`✅ Room created!\nCode: ${result.roomCode}\nYou are HOST`);
         } catch (error) {
@@ -4662,17 +4421,17 @@ class GamesManager {
             const result = await this.apiCall(`/games/join-private/${roomCode.toUpperCase()}`, 'POST');
             this.state.currentRoom = result.roomCode;
             this.state.gameStatus = 'waiting';
-
+            
             const roomInfo = await this.apiCall(`/games/room/${roomCode.toUpperCase()}`);
-
+            
             if (roomInfo.players && roomInfo.players.length > 0) {
                 const firstPlayer = roomInfo.players[0];
                 this.state.isHost = (String(firstPlayer.userId) === String(this.state.playerId));
-
+                
                 for (const player of roomInfo.players) {
                     if (String(player.userId) !== String(this.state.playerId)) {
-                        this.state.opponent = {
-                            username: player.username,
+                        this.state.opponent = { 
+                            username: player.username, 
                             userId: player.userId,
                             score: player.score || 0
                         };
@@ -4682,11 +4441,11 @@ class GamesManager {
                     }
                 }
             }
-
+            
             if (this.state.socket) {
                 this.state.socket.emit('joinGameRoom', this.state.currentRoom);
             }
-
+            
             this.updateUI();
             alert(`✅ Joined room ${roomCode}!\nYou are ${this.state.isHost ? 'HOST' : 'PLAYER'}`);
         } catch (error) {
@@ -4723,25 +4482,25 @@ class GamesManager {
 
         try {
             console.log(`📤 Submitting answer for Q${questionIndex + 1}: ${answerIndex}`);
-
+            
             // Store answer locally immediately (without isCorrect - backend will tell us)
             this.state.playerAnswers[questionIndex] = {
                 answerIndex: answerIndex,
                 timestamp: Date.now(),
                 isCorrect: null // Will be set by backend response
             };
-
+            
             // Update UI immediately (shows selected answer)
             this.updateUI();
-
+            
             // Send to backend for validation
             const response = await this.apiCall(`/games/answer/${this.state.currentRoom}`, 'POST', {
                 questionIndex: questionIndex,
                 answerIndex: answerIndex
             });
-
+            
             console.log('📊 Backend response:', response);
-
+            
             // Update local answer with correctness from backend
             if (response.isCorrect !== undefined) {
                 this.state.playerAnswers[questionIndex].isCorrect = response.isCorrect;
@@ -4749,7 +4508,7 @@ class GamesManager {
                 this.state.playerAnswers[questionIndex].selectedOption = response.selectedOption;
                 this.state.playerAnswers[questionIndex].correctOption = response.correctOption;
             }
-
+            
             // Update scores from response
             if (response.scores && Array.isArray(response.scores)) {
                 response.scores.forEach(player => {
@@ -4760,15 +4519,15 @@ class GamesManager {
                     }
                 });
             }
-
+            
             // Check if game finished
             if (response.gameState === 'finished') {
                 this.state.gameStatus = 'finished';
                 this.stopTimer();
             }
-
+            
             this.updateUI();
-
+            
         } catch (error) {
             console.error('Submit error:', error);
             // Remove the answer on error
@@ -4781,14 +4540,14 @@ class GamesManager {
     // Handle game started - NO SHUFFLING HERE
     static handleGameStarted(data) {
         console.log('🎮 Game started with data:', data);
-
+        
         this.state.gameStatus = 'playing';
         this.state.playerAnswers = {};
         this.state.opponentAnswers = {};
         this.state.timeLeft = 60;
         this.state.scores = { player: 0, opponent: 0 };
         this.state.gameStartedAt = Date.now();
-
+        
         if (data.questions) {
             this.state.questions = data.questions.slice(0, 5).map((q, idx) => {
                 // Use questions AS-IS from backend - NO SHUFFLING
@@ -4799,7 +4558,7 @@ class GamesManager {
                 return q;
             });
         }
-
+        
         this.startTimer();
         this.updateUI();
     }
@@ -4807,15 +4566,15 @@ class GamesManager {
     // Timer
     static startTimer() {
         this.stopTimer();
-
+        
         this.state.timer = setInterval(() => {
             this.state.timeLeft--;
-
+            
             if (this.state.timeLeft <= 0) {
                 this.stopTimer();
                 this.forceFinishGame();
             }
-
+            
             this.updateUI();
         }, 1000);
     }
@@ -4830,11 +4589,11 @@ class GamesManager {
     // Force finish when time's up
     static async forceFinishGame() {
         console.log('⏰ Time\'s up! Force finishing game...');
-
+        
         try {
             // Get final scores from server
             const roomInfo = await this.apiCall(`/games/room/${this.state.currentRoom}`);
-
+            
             if (roomInfo.players) {
                 roomInfo.players.forEach(player => {
                     if (String(player.userId) === String(this.state.playerId)) {
@@ -4844,12 +4603,12 @@ class GamesManager {
                     }
                 });
             }
-
+            
             this.state.gameStatus = 'finished';
             this.updateUI();
-
+            
             alert('⏰ Time\'s up! Game finished.');
-
+            
         } catch (error) {
             console.error('Force finish error:', error);
             // Calculate local score as fallback (using correctIndex from backend)
@@ -4865,7 +4624,7 @@ class GamesManager {
         for (let i = 0; i < 5; i++) {
             const answer = this.state.playerAnswers[i];
             const question = this.state.questions[i];
-
+            
             if (answer && question && question.correctIndex !== undefined) {
                 if (answer.answerIndex === question.correctIndex) {
                     score++;
@@ -4878,10 +4637,10 @@ class GamesManager {
     // Handle game finished
     static handleGameFinished(data) {
         console.log('🏁 Game finished with data:', data);
-
+        
         this.state.gameStatus = 'finished';
         this.stopTimer();
-
+        
         if (data.scores) {
             data.scores.forEach(player => {
                 if (String(player.userId) === String(this.state.playerId)) {
@@ -4891,7 +4650,7 @@ class GamesManager {
                 }
             });
         }
-
+        
         this.updateUI();
     }
 
@@ -4907,7 +4666,7 @@ class GamesManager {
         } catch (error) {
             console.error('Leave error:', error);
         }
-
+        
         this.resetGame();
     }
 
@@ -4923,7 +4682,7 @@ class GamesManager {
         this.state.isHost = false;
         this.state.scores = { player: 0, opponent: 0 };
         this.state.gameStartedAt = null;
-
+        
         this.stopTimer();
         this.updateUI();
     }
@@ -4932,9 +4691,9 @@ class GamesManager {
     static updateUI() {
         const container = document.getElementById('gamesContent');
         if (!container) return;
-
+        
         let html = '';
-
+        
         switch (this.state.gameStatus) {
             case 'idle':
                 html = this.getLobbyHTML();
@@ -4949,7 +4708,7 @@ class GamesManager {
                 html = this.getFinishedHTML();
                 break;
         }
-
+        
         container.innerHTML = html;
         this.attachEvents();
     }
@@ -4959,7 +4718,7 @@ class GamesManager {
         const answeredCount = Object.keys(this.state.playerAnswers).length;
         const playerScore = this.state.scores.player || 0;
         const opponentScore = this.state.scores.opponent || 0;
-
+        
         return `
             <div style="padding: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -4993,14 +4752,14 @@ class GamesManager {
                     <h3 style="text-align: center; margin-bottom: 30px;">Answer all 5 questions within 60 seconds!</h3>
                     
                     <div style="display: grid; gap: 20px;">
-                        ${[0, 1, 2, 3, 4].map(qIndex => {
-            const question = this.state.questions[qIndex];
-            const answer = this.state.playerAnswers[qIndex];
-            const hasAnswered = answer !== undefined;
-            const isCorrect = hasAnswered && answer.isCorrect === true;
-            const correctAnswerIndex = hasAnswered ? answer.correctAnswerIndex : null;
-
-            return `
+                        ${[0,1,2,3,4].map(qIndex => {
+                            const question = this.state.questions[qIndex];
+                            const answer = this.state.playerAnswers[qIndex];
+                            const hasAnswered = answer !== undefined;
+                            const isCorrect = hasAnswered && answer.isCorrect === true;
+                            const correctAnswerIndex = hasAnswered ? answer.correctAnswerIndex : null;
+                            
+                            return `
                                 <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; ${hasAnswered ? (isCorrect ? 'border-left: 5px solid #28a745;' : 'border-left: 5px solid #dc3545;') : ''}">
                                     <div style="font-weight: bold; margin-bottom: 15px; color: #333;">
                                         Question ${qIndex + 1}: ${question?.text || 'Loading...'}
@@ -5008,10 +4767,10 @@ class GamesManager {
                                     
                                     <div style="display: grid; gap: 10px;">
                                         ${question ? question.options.map((option, aIndex) => {
-                const isSelected = hasAnswered && answer.answerIndex === aIndex;
-                const isCorrectOption = hasAnswered && correctAnswerIndex === aIndex;
-
-                return `
+                                            const isSelected = hasAnswered && answer.answerIndex === aIndex;
+                                            const isCorrectOption = hasAnswered && correctAnswerIndex === aIndex;
+                                            
+                                            return `
                                                 <button onclick="GamesManager.submitAnswer(${qIndex}, ${aIndex})" 
                                                         style="
                                                             padding: 12px;
@@ -5030,7 +4789,7 @@ class GamesManager {
                                                     ${hasAnswered && isSelected && !isCorrectOption ? ' ❌' : ''}
                                                 </button>
                                             `;
-            }).join('') : 'Loading options...'}
+                                        }).join('') : 'Loading options...'}
                                     </div>
                                     
                                     ${hasAnswered ? `
@@ -5045,7 +4804,7 @@ class GamesManager {
                                     ` : ''}
                                 </div>
                             `;
-        }).join('')}
+                        }).join('')}
                     </div>
                 </div>
                 
@@ -5274,8 +5033,8 @@ class GamesManager {
         const playerScore = this.state.scores.player || 0;
         const opponentScore = this.state.scores.opponent || 0;
         const winner = playerScore > opponentScore ? '🎉 You Win!' :
-            playerScore < opponentScore ? 'Opponent Wins!' : '🤝 Draw!';
-
+                      playerScore < opponentScore ? 'Opponent Wins!' : '🤝 Draw!';
+        
         return `
             <div style="text-align: center; padding: 30px;">
                 <h2 style="color: #495057; margin-bottom: 10px;">🏁 Game Over!</h2>
@@ -5360,18 +5119,18 @@ class GamesManager {
                         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
                     ">
                         <div style="font-size: 16px; color: #495057; margin-bottom: 10px;">
-                            ${playerScore > opponentScore ?
-                    `🎯 You scored ${playerScore - opponentScore} more point${playerScore - opponentScore === 1 ? '' : 's'}!` :
-                    playerScore < opponentScore ?
-                        `🎯 Opponent scored ${opponentScore - playerScore} more point${opponentScore - playerScore === 1 ? '' : 's'}!` :
-                        '🤝 You both scored the same!'
-                }
+                            ${playerScore > opponentScore ? 
+                                `🎯 You scored ${playerScore - opponentScore} more point${playerScore - opponentScore === 1 ? '' : 's'}!` :
+                              playerScore < opponentScore ? 
+                                `🎯 Opponent scored ${opponentScore - playerScore} more point${opponentScore - playerScore === 1 ? '' : 's'}!` :
+                                '🤝 You both scored the same!'
+                            }
                         </div>
                         <div style="font-size: 14px; color: #6c757d;">
-                            ${playerScore === 5 ? '🎉 Perfect score! Amazing!' :
-                    playerScore >= 4 ? '👏 Great job! Almost perfect!' :
-                        playerScore >= 3 ? '👍 Good effort! Keep practicing!' :
-                            '💪 Keep practicing, you\'ll get better!'}
+                            ${playerScore === 5 ? '🎉 Perfect score! Amazing!' : 
+                              playerScore >= 4 ? '👏 Great job! Almost perfect!' :
+                              playerScore >= 3 ? '👍 Good effort! Keep practicing!' :
+                              '💪 Keep practicing, you\'ll get better!'}
                         </div>
                     </div>
                 ` : ''}
@@ -5385,7 +5144,7 @@ class GamesManager {
             const el = document.getElementById(id);
             if (el) el.onclick = handler.bind(this);
         };
-
+        
         attach('createRoomBtn', () => this.createRoom());
         attach('joinRoomBtn', () => this.joinRoom());
         attach('startGameBtn', () => this.startGame());
@@ -5490,5 +5249,360 @@ UIManager.setupTabNavigation = function () {
             }
         });
     });
+};
 
+
+// ==================== MOBILE SIDEBAR MANAGER ====================
+class MobileSidebarManager {
+    static init() {
+        this.setupEventListeners();
+        this.updateSidebarForUser();
+    }
+
+    static setupEventListeners() {
+        // Menu toggle
+        document.getElementById('menuToggle')?.addEventListener('click', () => this.openSidebar());
+        document.getElementById('closeMenu')?.addEventListener('click', () => this.closeSidebar());
+        document.getElementById('overlay')?.addEventListener('click', () => this.closeSidebar());
+
+        // Theme toggle in sidebar
+        document.getElementById('sidebarThemeToggle')?.addEventListener('click', () => {
+            ThemeManager.toggleTheme();
+        });
+
+        // Mobile auth forms
+        document.getElementById('loginFormMobile')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsernameMobile').value;
+            const password = document.getElementById('loginPasswordMobile').value;
+            await AuthManager.login(username, password);
+            this.closeSidebar();
+        });
+
+        document.getElementById('signupFormMobile')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupNameMobile').value;
+            const username = document.getElementById('signupUsernameMobile').value;
+            const password = document.getElementById('signupPasswordMobile').value;
+            const confirmPassword = document.getElementById('signupConfirmPasswordMobile').value;
+            
+            const validation = AuthManager.validateSignup(name, username, password, confirmPassword);
+            if (!validation.valid) {
+                this.showAuthErrorMobile(validation.message);
+                return;
+            }
+            
+            await AuthManager.signup(name, username, password);
+            this.closeSidebar();
+        });
+
+        // Logout button
+        document.getElementById('logoutBtnMobile')?.addEventListener('click', () => {
+            AuthManager.logout();
+            this.closeSidebar();
+        });
+
+        // Mobile navigation tabs
+        document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = item.dataset.tab;
+                
+                // Update active state
+                document.querySelectorAll('.sidebar-menu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                item.classList.add('active');
+                
+                // Switch tab using existing tab system
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.tab === tabId) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                this.closeSidebar();
+            });
+        });
+
+        // Mobile auth tabs
+        document.querySelectorAll('.auth-tab-mobile').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                document.querySelectorAll('.auth-tab-mobile').forEach(t => {
+                    t.classList.remove('active');
+                });
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.auth-form-mobile').forEach(form => {
+                    form.classList.remove('active');
+                    if (form.id === `${tabName}FormMobile`) {
+                        form.classList.add('active');
+                    }
+                });
+                
+                this.clearAuthErrorMobile();
+            });
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            if (sidebar?.classList.contains('show') && 
+                !sidebar.contains(e.target) && 
+                !menuToggle?.contains(e.target)) {
+                this.closeSidebar();
+            }
+        });
+    }
+
+    static openSidebar() {
+        document.getElementById('sidebar')?.classList.add('show');
+        document.getElementById('overlay')?.classList.add('show');
+        document.body.classList.add('sidebar-open');
+        
+        // Update sidebar content
+        this.updateSidebarForUser();
+        this.updateThemeStatus();
+    }
+
+    static closeSidebar() {
+        document.getElementById('sidebar')?.classList.remove('show');
+        document.getElementById('overlay')?.classList.remove('show');
+        document.body.classList.remove('sidebar-open');
+    }
+
+    static updateSidebarForUser() {
+        const userInfo = document.getElementById('userInfoSidebar');
+        const authWindow = document.getElementById('authWindowMobile');
+        const userActions = document.getElementById('userActionsMobile');
+        const userNameMobile = document.getElementById('mobileUserName');
+        const sidebarUserName = document.getElementById('sidebarUserName');
+        const sidebarUserAvatar = document.getElementById('sidebarUserAvatar');
+
+        if (AppState.currentUser) {
+            // User is logged in
+            if (userInfo) {
+                userInfo.style.display = 'block';
+            }
+            if (authWindow) {
+                authWindow.style.display = 'none';
+            }
+            if (userActions) {
+                userActions.style.display = 'block';
+            }
+            
+            // Update user info
+            if (userNameMobile) {
+                userNameMobile.textContent = AppState.currentUser.username;
+            }
+            if (sidebarUserName) {
+                sidebarUserName.textContent = AppState.currentUser.name || AppState.currentUser.username;
+            }
+            if (sidebarUserAvatar) {
+                const initials = (AppState.currentUser.name || AppState.currentUser.username)
+                    .charAt(0)
+                    .toUpperCase();
+                sidebarUserAvatar.textContent = initials;
+            }
+        } else {
+            // User is not logged in
+            if (userInfo) {
+                userInfo.style.display = 'none';
+            }
+            if (authWindow) {
+                authWindow.style.display = 'block';
+            }
+            if (userActions) {
+                userActions.style.display = 'none';
+            }
+        }
+    }
+
+    static updateThemeStatus() {
+        const themeStatus = document.getElementById('themeStatus');
+        const themeIcon = document.getElementById('sidebarThemeToggle')?.querySelector('i');
+        
+        if (document.body.classList.contains('dark-theme')) {
+            if (themeStatus) themeStatus.textContent = 'On';
+            if (themeIcon) themeIcon.className = 'fas fa-sun';
+        } else {
+            if (themeStatus) themeStatus.textContent = 'Off';
+            if (themeIcon) themeIcon.className = 'fas fa-moon';
+        }
+    }
+
+    static showAuthErrorMobile(message) {
+        const errorElement = document.getElementById('authErrorMobile');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+    }
+
+    static clearAuthErrorMobile() {
+        const errorElement = document.getElementById('authErrorMobile');
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+        }
+    }
+}
+
+// ==================== UPDATE EXISTING CLASSES ====================
+
+// Update ThemeManager to also handle mobile theme toggle
+const originalToggleTheme = ThemeManager.toggleTheme;
+ThemeManager.toggleTheme = function() {
+    originalToggleTheme.apply(this);
+    MobileSidebarManager.updateThemeStatus();
+};
+
+// Update AuthManager to refresh mobile sidebar on auth events
+const originalLogin = AuthManager.login;
+AuthManager.login = async function(...args) {
+    const result = await originalLogin.apply(this, args);
+    MobileSidebarManager.updateSidebarForUser();
+    return result;
+};
+
+const originalSignup = AuthManager.signup;
+AuthManager.signup = async function(...args) {
+    const result = await originalSignup.apply(this, args);
+    MobileSidebarManager.updateSidebarForUser();
+    return result;
+};
+
+// Update logout to refresh mobile sidebar
+AuthManager.logout = async function() {
+    // Original logout logic (keep your existing code)
+    try {
+        await fetch(`${CONFIG.API_BASE_URL}/logout`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+
+    AppState.currentUser = null;
+    AppState.accessToken = null;
+    AppState.messageQueue = [];
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+
+    if (AppState.socket) {
+        AppState.socket.disconnect();
+        AppState.socket = null;
+    }
+
+    this.updateAuthButton();
+    UIManager.updateContentForUser();
+    MobileSidebarManager.updateSidebarForUser(); // Update mobile sidebar
+    NotificationManager.show('Logged out successfully', 'success');
+};
+
+// Update ChatManager to update mobile badge
+const originalUpdateChatBadge = ChatManager.updateChatBadge;
+ChatManager.updateChatBadge = function() {
+    originalUpdateChatBadge.apply(this);
+    
+    // Update mobile badge
+    const badge = document.getElementById('mobileChatBadge');
+    if (badge) {
+        const unreadElements = document.querySelectorAll('.unread-count');
+        let totalUnread = 0;
+
+        unreadElements.forEach(el => {
+            if (el.style.display !== 'none') {
+                const count = parseInt(el.textContent) || 0;
+                totalUnread += count;
+            }
+        });
+
+        if (totalUnread > 0) {
+            badge.textContent = totalUnread;
+            badge.style.display = 'inline-flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+};
+
+// Update AppInitializer to include mobile sidebar
+AppInitializer.init = function() {
+    this.addGlobalStyles();
+    this.loadSavedSession();
+
+    ThemeManager.init();
+    NavigationManager.init();
+    NotificationPopup.init();
+    AuthManager.init();
+    ChatManager.setupEventListeners();
+    UIManager.setupTabNavigation();
+    MockManager.init();
+    NotesManager.init();
+    GamesManager.init();
+
+    // Initialize mobile sidebar
+    MobileSidebarManager.init();
+
+    console.log('🎯 Catalyst App Initialized (Mobile Ready)');
+};
+
+// Add CSS for responsive behavior
+AppInitializer.addGlobalStyles = function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .nav-items {
+                display: none !important;
+            }
+            
+            .menu-toggle {
+                display: flex !important;
+            }
+            
+            .searchbar {
+                max-width: none;
+                flex: 1;
+            }
+            
+            .logo .tagline {
+                display: none;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none !important;
+            }
+            
+            .sidebar {
+                display: none !important;
+            }
+            
+            .nav-items {
+                display: flex !important;
+            }
+        }
+        
+        /* Sidebar open state */
+        body.sidebar-open {
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(style);
 };
