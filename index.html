@@ -17,8 +17,12 @@
 
     <div class="overlay" id="overlay"></div>
 
-
     <nav class="navbar">
+        <!-- Hamburger Menu Button -->
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
         <div class="logo">
             <div class="logo-icon">C</div>
             <h2>Catalyst</h2>
@@ -30,12 +34,11 @@
             <input type="text" placeholder="Search courses, topics..." id="globalSearch">
         </div>
 
+        <!-- Desktop Navigation (hidden on mobile) -->
         <div class="nav-items">
-
             <button class="theme-toggle" id="themeToggle" title="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
-
 
             <div class="notification-container">
                 <button class="notification-btn" id="notificationBtn">
@@ -75,7 +78,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="auth-container">
                 <button class="auth-btn" id="authBtn">Login / Sign Up</button>
@@ -131,6 +133,147 @@
         </div>
     </nav>
 
+    <!-- Mobile Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon">C</div>
+                <h3>Catalyst</h3>
+            </div>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- User Info Section (when logged in) -->
+        <div class="user-info-sidebar" id="userInfoSidebar" style="display: none;">
+            <div class="user-avatar" id="sidebarUserAvatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-name" id="sidebarUserName"></div>
+            <div class="user-email" id="sidebarUserEmail"></div>
+        </div>
+
+        <!-- Search in Sidebar -->
+        <div class="sidebar-search">
+            <div class="searchbar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search courses, topics..." id="mobileSearch">
+            </div>
+        </div>
+
+        <!-- Navigation Items -->
+        <div class="sidebar-nav">
+            <!-- Theme Toggle -->
+            <button class="sidebar-btn" id="sidebarThemeToggle">
+                <i class="fas fa-moon"></i>
+                <span>Dark Mode</span>
+                <span class="theme-status" id="themeStatus">Off</span>
+            </button>
+
+            <!-- Notifications -->
+            <div class="notification-container">
+                <button class="sidebar-btn" id="sidebarNotificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    <span class="badge" id="sidebarNotificationBadge" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Auth Section -->
+        <div class="sidebar-auth">
+            <div class="auth-section">
+                <!-- Login/Signup Forms -->
+                <div class="auth-window-mobile" id="authWindowMobile">
+                    <form class="auth-form-mobile active" id="loginFormMobile">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="loginUsernameMobile" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPasswordMobile" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Login</button>
+                        <div class="auth-footer">
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+                    </form>
+
+                    <form class="auth-form-mobile" id="signupFormMobile">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="signupNameMobile" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="signupUsernameMobile" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPasswordMobile" placeholder="Create a password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="signupConfirmPasswordMobile" 
+                                   placeholder="Confirm your password" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Create Account</button>
+                    </form>
+
+                    <div id="authLoadingMobile" style="display: none; text-align: center; margin-top: 20px;">
+                        <i class="fas fa-spinner fa-spin"></i> Processing...
+                    </div>
+                    <div id="authErrorMobile" style="display: none; color: #ef4444; margin-top: 10px; text-align: center;"></div>
+                </div>
+
+                <!-- User Info when logged in -->
+                <div class="user-actions-mobile" id="userActionsMobile" style="display: none;">
+                    <div class="user-info-mobile">
+                        <div class="user-avatar-mobile">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-details-mobile">
+                            <div class="user-name-mobile" id="mobileUserName"></div>
+                            <div class="user-status-mobile">Online</div>
+                        </div>
+                    </div>
+                    <button class="logout-btn-mobile" id="logoutBtnMobile">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Items for Navigation -->
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-title">Main Menu</div>
+                <a href="#" class="sidebar-menu-item active" data-tab="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="sidebar-menu-item" data-tab="chat">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat</span>
+                    <span class="badge" id="mobileChatBadge">0</span>
+                </a>
+                <a href="#" class="sidebar-menu-item" data-tab="notes">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Notes</span>
+                </a>
+                <a href="#" class="sidebar-menu-item" data-tab="games">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="#" class="sidebar-menu-item" data-tab="mocks">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Mock Tests</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <div class="app-content">
 
@@ -152,7 +295,6 @@
                 <i class="fas fa-file-alt"></i> Mocks
             </button>
         </div>
-
 
         <div class="tab-contents">
 
@@ -275,6 +417,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="tab-content" id="notes-tab">
                 <div class="notes-container">
                     <div class="notes-sidebar">
@@ -366,7 +509,6 @@
                 </div>
             </div>
 
-            <!-- Games Tab -->
             <div class="tab-content" id="games-tab">
                 <div class="games-container">
                     <div class="games-header">
@@ -393,7 +535,6 @@
                     </div>
 
                     <div class="games-content" id="gamesContent">
-                        <!-- Games content will be loaded here -->
                         <div class="loading-games">
                             <i class="fas fa-spinner fa-spin"></i>
                             <p>Loading games...</p>
@@ -401,7 +542,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="tab-content" id="mocks-tab">
                 <div class="mock-container">
@@ -419,7 +559,6 @@
                         </div>
                     </div>
 
-                    <!-- Mocks List -->
                     <div class="mocks-list-container" id="mocksList">
                         <div class="loading-mocks">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -427,17 +566,12 @@
                         </div>
                     </div>
 
-                    <!-- Question Section (Hidden initially) -->
                     <div class="question-section" id="questionSection" style="display: none;">
-                        <!-- Questions will be loaded here -->
                     </div>
 
-                    <!-- Results Section (Hidden initially) -->
                     <div class="results-section" id="mockResultSection" style="display: none;">
-                        <!-- Results will be displayed here -->
                     </div>
 
-                    <!-- Navigation and Submit -->
                     <div class="mock-navigation" id="mockNavigation" style="display: none;">
                         <button class="btn-secondary" id="prevQuestionBtn">
                             <i class="fas fa-chevron-left"></i> Previous
@@ -462,102 +596,7 @@
         </div>
     </div>
 
-    <!-- Modals Container -->
     <div id="modalsContainer"></div>
-    <!-- Add this to your HTML, right after <body class="light-theme"> -->
-    <button class="menu-toggle" id="menuToggle">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-title">Menu</div>
-            <button class="close-menu" id="closeMenu">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <!-- User info (only shown when logged in) -->
-        <div class="user-info-sidebar" id="userInfoSidebar">
-            <div class="user-avatar" id="userAvatar">U</div>
-            <div class="user-name" id="userName">User Name</div>
-            <div class="user-email" id="userEmail">user@example.com</div>
-        </div>
-
-        <!-- Search in sidebar -->
-        <div class="sidebar-search">
-            <div class="searchbar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search courses, topics..." id="sidebarSearch">
-            </div>
-        </div>
-
-        <!-- Navbar items moved to sidebar -->
-        <div class="sidebar-nav-items">
-            <!-- Theme toggle -->
-            <button class="sidebar-btn sidebar-theme-toggle" id="sidebarThemeToggle">
-                <i class="fas fa-moon"></i>
-                Theme
-                <span class="theme-status" id="sidebarThemeStatus">Light</span>
-            </button>
-
-            <!-- Notifications button -->
-            <button class="sidebar-btn sidebar-notification-btn" id="sidebarNotificationBtn">
-                <i class="fas fa-bell"></i>
-                Notifications
-                <span class="sidebar-badge" id="sidebarNotificationBadge" style="display: none;"></span>
-            </button>
-
-            <!-- Auth button -->
-            <button class="sidebar-btn sidebar-auth-btn" id="sidebarAuthBtn">
-                <i class="fas fa-sign-in-alt"></i>
-                Login / Sign Up
-            </button>
-        </div>
-
-        <!-- Main menu sections -->
-        <div class="menu-section">
-            <div class="menu-title">Main Menu</div>
-            <a href="#" class="menu-item active" data-tab="home">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="#" class="menu-item" data-tab="chat">
-                <i class="fas fa-comments"></i>
-                <span>Chat</span>
-                <span class="unread-badge" id="sidebarChatUnread" style="margin-left: auto; display: none;">0</span>
-            </a>
-            <a href="#" class="menu-item" data-tab="notes">
-                <i class="fas fa-sticky-note"></i>
-                <span>Notes</span>
-            </a>
-            <a href="#" class="menu-item" data-tab="games">
-                <i class="fas fa-gamepad"></i>
-                <span>Games</span>
-            </a>
-            <a href="#" class="menu-item" data-tab="mocks">
-                <i class="fas fa-file-alt"></i>
-                <span>Mock Tests</span>
-            </a>
-        </div>
-
-        <!-- Additional menu sections can go here -->
-        <div class="menu-section">
-            <div class="menu-title">Account</div>
-            <a href="#" class="menu-item" id="sidebarProfileBtn">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </a>
-            <a href="#" class="menu-item" id="sidebarSettingsBtn">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
-            <a href="#" class="menu-item" id="sidebarHelpBtn">
-                <i class="fas fa-question-circle"></i>
-                <span>Help & Support</span>
-            </a>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
