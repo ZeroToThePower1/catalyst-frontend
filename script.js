@@ -1,6 +1,6 @@
 
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:3000',
+    API_BASE_URL: 'https://catalyst-server-a057.onrender.com',
     SOCKET_RECONNECT_DELAY: 3000,
     NOTIFICATION_DURATION: 3000,
     MAX_RECONNECT_ATTEMPTS: 5
@@ -5490,4 +5490,5 @@ UIManager.setupTabNavigation = function () {
             }
         });
     });
+
 };
