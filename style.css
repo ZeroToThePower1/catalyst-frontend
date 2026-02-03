@@ -2683,6 +2683,7 @@ body {
 /* Ensure content doesn't shift when sidebar opens */
 .app-content {
     transition: margin-left 0.3s ease;
+    height: 120vh;
 }
 
 body.sidebar-open .app-content {
@@ -2717,6 +2718,7 @@ body.sidebar-open .app-content {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
 }
+
 
 
 
