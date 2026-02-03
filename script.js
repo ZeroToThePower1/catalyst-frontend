@@ -4287,7 +4287,7 @@ class GamesManager {
         gameStartedAt: null
     };
 
-    static API_BASE = 'http://localhost:3000';
+    static API_BASE = 'https://catalyst-server-a057.onrender.com';
 
     // Initialize
     static async init() {
@@ -5606,4 +5606,5 @@ AppInitializer.addGlobalStyles = function() {
     `;
     document.head.appendChild(style);
 };
+
 
