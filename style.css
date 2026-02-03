@@ -301,6 +301,21 @@ body {
     margin: 0 -12px;
 }
 
+.notes-progress {
+    padding: 15px;
+    border-top: 1px solid var(--border);
+    background: var(--sidebar-bg);
+    display: none;
+}
+.notes-search i {
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    display: none;
+}
+
 .notification-item:last-child {
     border-bottom: none;
 }
@@ -2673,4 +2688,31 @@ body {
 body.sidebar-open .app-content {
     margin-left: 0;
     overflow: hidden;
+}
+.donation-chip {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+.donation-chip a {
+  background: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.donation-chip a:hover {
+  background: rgba(255, 152, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
 }
