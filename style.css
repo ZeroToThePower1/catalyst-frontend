@@ -2691,10 +2691,11 @@ body.sidebar-open .app-content {
 }
 .donation-chip {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  top: 20px;
+  left: 20px;
   z-index: 100;
 }
+
 
 .donation-chip a {
   background: rgba(255, 152, 0, 0.1);
@@ -2716,3 +2717,4 @@ body.sidebar-open .app-content {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
 }
+
